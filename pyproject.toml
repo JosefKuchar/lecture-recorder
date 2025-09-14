@@ -10,4 +10,5 @@ dependencies = [
     "pydantic>=2.11.9",
     "schedule>=1.2.2",
     "typer>=0.17.4",
+    "yt-dlp>=2025.9.5",
 ]
