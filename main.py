@@ -59,18 +59,11 @@ def main():
 
     # Schedule jobs
     # PV179 System Development in C#/.NET
-    # schedule.every().tuesday.at("14:00").do(
-    #     job,
-    #     "https://cdn.streaming.cesnet.cz/muni/munifia318.stream/playlist.m3u8",
-    #     "pv179",
-    #     120,
-    # )
-
-    schedule.every().sunday.at("18:01").do(
+    schedule.every().tuesday.at("14:00").do(
         job,
         "https://cdn.streaming.cesnet.cz/muni/munifia318.stream/playlist.m3u8",
         "pv179",
-        2,
+        120,
     )
 
     # PV293 Software Architectures
