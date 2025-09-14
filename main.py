@@ -67,7 +67,7 @@ def main():
     )
 
     # PV293 Software Architectures
-    schedule.every().wednesday.at("14:00").do(
+    schedule.every().friday.at("8:00").do(
         job,
         "https://cdn.streaming.cesnet.cz/muni/munifia217.stream/playlist.m3u8",
         "pv293",
