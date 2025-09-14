@@ -12,3 +12,5 @@ wheels/
 .venv
 *.log
 *.mp4
+
+*.yaml

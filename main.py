@@ -6,6 +6,33 @@ import time
 import signal
 from loguru import logger
 from datetime import datetime
+import typer
+import pydantic
+import pathlib
+import omegaconf
+
+
+class Schedule(pydantic.BaseModel):
+    """
+    Represents a recording schedule
+    """
+
+    url: str
+    name: str
+    duration: int  # in minutes
+    day: str  # e.g., "monday", "tuesday", etc.
+    time: str  # in HH:MM format
+
+
+class Config(pydantic.BaseModel):
+    """
+    App configuration
+    """
+
+    schedules: list[Schedule]
+
+
+app = typer.Typer()
 
 
 def record(url: str, name: str, length: int):
@@ -48,32 +75,27 @@ def job(*args):
     job_thread.start()
 
 
-def main():
+@app.command()
+def main(config_path: pathlib.Path):
     """
     Main function to set up logging and schedule the recording jobs
     """
+    conf: Config = omegaconf.OmegaConf.load(config_path)
 
     logger.add("file_{time}.log", rotation="100 MB")
 
     logger.info("Scheduler started")
 
     # Schedule jobs
-    # PV179 System Development in C#/.NET
-    schedule.every().tuesday.at("14:00").do(
-        job,
-        "https://cdn.streaming.cesnet.cz/muni/munifia318.stream/playlist.m3u8",
-        "pv179",
-        120,
-    )
+    for schedule_item in conf.schedules:
+        getattr(schedule.every(), schedule_item.day).at(schedule_item.time).do(
+            job,
+            schedule_item.url,
+            schedule_item.name,
+            schedule_item.duration,
+        )
 
-    # PV293 Software Architectures
-    schedule.every().friday.at("8:00").do(
-        job,
-        "https://cdn.streaming.cesnet.cz/muni/munifia217.stream/playlist.m3u8",
-        "pv293",
-        120,
-    )
-
+    logger.info(f"Loaded {len(conf.schedules)} schedules")
     logger.info("Waiting for jobs...")
     while True:
         schedule.run_pending()
@@ -81,4 +103,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    app()

@@ -6,5 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "loguru>=0.7.3",
+    "omegaconf>=2.3.0",
+    "pydantic>=2.11.9",
     "schedule>=1.2.2",
+    "typer>=0.17.4",
 ]
