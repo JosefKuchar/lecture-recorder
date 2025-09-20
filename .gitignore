@@ -13,4 +13,9 @@ wheels/
 *.log
 *.mp4
 
+# Configs
 *.yaml
+
+# Postprocessing model
+/postprocessing/deep-filter
+/postprocessing/*.tar.gz
