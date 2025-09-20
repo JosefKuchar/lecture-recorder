@@ -13,5 +13,5 @@ This Bash script processes a video by extracting its audio, cleaning it using **
 ## Usage
 
 ```bash
-./process_video.sh input_video.mp4
+./postprocess.sh input_video.mp4
 ```
