@@ -19,3 +19,6 @@ wheels/
 # Postprocessing model
 /postprocessing/deep-filter
 /postprocessing/*.tar.gz
+
+# Output files
+*.mp4
