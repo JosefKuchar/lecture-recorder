@@ -52,14 +52,14 @@ This service handles the scheduling and recording of streams
 ## Post-processing service
 This service monitors the `outputs/` directory for new recordings and processes them. You don't need to run this service, but the quality of the recordings will be better if you do.
 
-First, you have to setup the postprocessing environment. Look at the `postprocess/README.md` for instructions.
+First, you have to setup the postprocessing environment. Look at the `postprocessing/README.md` for instructions.
 
 1. Run the postprocessing service:
    ```sh
    uv run postprocess_service.py
    ```
 
-2. The service will automatically process new recordings in the `outputs/` folder. After processing, the processed files will be in the `postprocess` folder
+2. The service will automatically process new recordings in the `outputs/` folder. After processing, the processed files will be in the `postprocessing` folder
 
 ---
 
