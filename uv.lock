@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -95,6 +95,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "schedule" },
     { name = "typer" },
+    { name = "yt-dlp" },
 ]
 
 [package.metadata]
@@ -104,6 +105,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.11.9" },
     { name = "schedule", specifier = ">=1.2.2" },
     { name = "typer", specifier = ">=0.17.4" },
+    { name = "yt-dlp", specifier = ">=2025.9.5" },
 ]
 
 [[package]]
@@ -272,4 +274,13 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/705086c9d734d3b663af0e9bb3d4de6578d08f46b1b101c2442fd9aecaa2/win32_setctime-1.2.0.tar.gz", hash = "sha256:ae1fdf948f5640aae05c511ade119313fb6a30d7eabe25fef9764dca5873c4c0", size = 4867, upload-time = "2024-12-07T15:28:28.314Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e1/07/c6fe3ad3e685340704d314d765b7912993bcb8dc198f0e7a89382d37974b/win32_setctime-1.2.0-py3-none-any.whl", hash = "sha256:95d644c4e708aba81dc3704a116d8cbc974d70b3bdb8be1d150e36be6e9d1390", size = 4083, upload-time = "2024-12-07T15:28:26.465Z" },
+]
+
+[[package]]
+name = "yt-dlp"
+version = "2025.9.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/50/b2/fb255d991857a6a8b2539487ed6063e7bf318f19310d81f039dedb3c2ad6/yt_dlp-2025.9.5.tar.gz", hash = "sha256:9ce080f80b2258e872fe8a75f4707ea2c644e697477186e20b9a04d9a9ea37cf", size = 3045982, upload-time = "2025-09-05T23:07:53.962Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/64/b3cc116e4f209c493f23d6af033c60ba32df74e086190fbed2bdc0073d12/yt_dlp-2025.9.5-py3-none-any.whl", hash = "sha256:68a03b5c50e3d0f6af7244bd4bf491c1b12e4e2112b051cde05cdfd2647eb9a8", size = 3272317, upload-time = "2025-09-05T23:07:51.396Z" },
 ]
