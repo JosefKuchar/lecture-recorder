@@ -1,15 +1,19 @@
+"""
+Service to download and record video streams based on a schedule
+"""
+
+import pathlib
+import signal
+import subprocess
 import threading
 import time
-import schedule
-import subprocess
-import time
-import signal
-from loguru import logger
 from datetime import datetime
-import typer
-import pydantic
-import pathlib
+
 import omegaconf
+import pydantic
+import schedule
+import typer
+from loguru import logger
 
 
 class Schedule(pydantic.BaseModel):
@@ -82,7 +86,7 @@ def main(config_path: pathlib.Path):
     """
     conf: Config = omegaconf.OmegaConf.load(config_path)
 
-    logger.add("file_{time}.log", rotation="100 MB")
+    logger.add("logs/download_{time}.log", rotation="10 MB")
 
     logger.info("Scheduler started")
 

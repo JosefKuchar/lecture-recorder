@@ -6,6 +6,7 @@ A Python script for automated recording of university lecture streams using sche
 - Schedules recordings using the `schedule` library.
 - Saves output files with timestamped names in the `outputs/` directory.
 - Logging with rotation using `loguru`.
+- Post-processing of recorded videos (optional) to enhance audio quality using machine learning model.
 
 ## Requirements
 
@@ -17,13 +18,17 @@ A Python script for automated recording of university lecture streams using sche
 - schedule
 - omegaconf
 - pydantic
+- watchdog
 - typer
 
 ## Usage
 
-1. Install [uv](https://github.com/astral-sh/uv):
+Install [uv](https://github.com/astral-sh/uv)
 
-2. Prepare your configuration in `config.yaml`. Example:
+## Download service
+This service handles the scheduling and recording of streams
+
+1. Prepare your configuration in `config.yaml`. Example:
    ```yaml
    schedules:
      - url: "https://example.com/stream.m3u8"
@@ -33,16 +38,28 @@ A Python script for automated recording of university lecture streams using sche
        time: "08:00"
    ```
 
-3. Run the script with your config file:
-   ```
-   uv run main.py config.yaml
+2. Run the script with your config file:
+   ```sh
+   uv run download_service.py config.yaml
    ```
 
-4. Recorded videos will be saved in the `outputs/` folder.
+3. Recorded videos will be saved in the `outputs/` folder.
 
-## Configuration
+### Configuration
 
 - Edit `config.yaml` to adjust stream URLs, recording times, and durations as needed.
+
+## Post-processing service
+This service monitors the `outputs/` directory for new recordings and processes them. You don't need to run this service, but the quality of the recordings will be better if you do.
+
+First, you have to setup the postprocessing environment. Look at the `postprocess/README.md` for instructions.
+
+1. Run the postprocessing service:
+   ```sh
+   uv run postprocess_service.py
+   ```
+
+2. The service will automatically process new recordings in the `outputs/` folder. After processing, the processed files will be in the `postprocess` folder
 
 ---
 
