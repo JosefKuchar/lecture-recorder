@@ -61,6 +61,18 @@ First, you have to setup the postprocessing environment. Look at the `postproces
 
 2. The service will automatically process new recordings in the `outputs/` folder. After processing, the processed files will be in the `postprocessing` folder
 
+## Upload service
+This service watches new files and uploads them to YouTube. You need to configure it first. Youtube module is included as a git submodule so you have to pull it first - `git submodule update --init --recursive`
+
+1. Configure the YouTube upload settings by following the instructions in the `youtube/README.md` file.
+
+2. Run the upload service:
+   ```sh
+   uv run upload_service.py
+   ```
+3. The service will automatically upload new processed recordings in the `postprocessing` folder to YouTube. You can also monitor raw recordings in the `outputs` folder using the `--watch-dir` option.
+
+
 ---
 
 This project is intended for educational use.

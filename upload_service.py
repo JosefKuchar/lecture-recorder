@@ -1,17 +1,19 @@
 """
-Service to postprocess recorded videos by enhancing audio quality
+Service to upload recorded videos to YouTube
 """
 
-import time
-import subprocess
 import threading
-from queue import Queue
+import time
 from argparse import ArgumentParser
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from loguru import logger
+from queue import Queue
+from pathlib import Path
 
-WATCH_DIR = "outputs"
+from googleapiclient.errors import HttpError
+from loguru import logger
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
+from youtube import get_authenticated_service, initialize_upload
 
 # Job queue
 task_queue = Queue()
@@ -29,6 +31,14 @@ def enqueue_if_valid(file_path):
     task_queue.put(file_path)
 
 
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
 class VideoHandler(FileSystemEventHandler):
     """
     Handles new video files in the watched directory
@@ -43,6 +53,39 @@ class VideoHandler(FileSystemEventHandler):
             enqueue_if_valid(event.dest_path)
 
 
+def upload_video(file_path):
+    """
+    Upload video to YouTube
+    """
+    path = Path(file_path)
+
+    settings = {
+        "videofile": file_path,
+        "title": path.stem,
+        "description": "",
+        "category": "27",  # Education
+        "keywords": "lecture, recording, education",
+        "privacyStatus": "unlisted",
+        "latitude": None,
+        "longitude": None,
+        "language": "cs",
+        "playlistId": None,
+        "thumbnail": None,
+        "license": "youtube",
+        "publishAt": None,
+        "publicStatsViewable": True,
+        "madeForKids": False,
+        "ageGroup": None,
+        "gender": None,
+        "geo": None,
+        "defaultAudioLanguage": None,
+        "force_refresh": True,
+    }
+    settings = dotdict(settings)
+    service = get_authenticated_service(settings)
+    initialize_upload(service, settings)
+
+
 def worker(worker_id):
     """
     Worker thread to process video files from the queue
@@ -52,19 +95,23 @@ def worker(worker_id):
         file_path = task_queue.get()
         try:
             logger.info(f"[Worker {worker_id}] Processing {file_path}")
-            subprocess.run(["postprocessing/postprocess.sh", file_path], check=True)
+            upload_video(file_path)
             logger.success(f"[Worker {worker_id}] Finished {file_path}")
-        except subprocess.CalledProcessError as e:
+        except HttpError as e:
             logger.error(f"[Worker {worker_id}] Error processing {file_path}: {e}")
-            # optionally re-queue for retry
-            # task_queue.put(file_path)
         finally:
             task_queue.task_done()
 
 
 if __name__ == "__main__":
     parser = ArgumentParser(
-        description="Watch directory and postprocess new video files"
+        description="Watch directory and upload new videos to YouTube"
+    )
+    parser.add_argument(
+        "--watch-dir",
+        type=str,
+        default="postprocessing",
+        help="Directory to watch for new video files",
     )
     parser.add_argument(
         "--workers",
@@ -74,7 +121,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    logger.add("logs/postprocess_{time}.log", rotation="10 MB")
+    logger.add("logs/upload_{time}.log", rotation="10 MB")
 
     # Start worker threads
     for i in range(args.workers):
@@ -84,10 +131,10 @@ if __name__ == "__main__":
     # Start watcher
     event_handler = VideoHandler()
     observer = Observer()
-    observer.schedule(event_handler, WATCH_DIR, recursive=False)
+    observer.schedule(event_handler, args.watch_dir, recursive=False)
     observer.start()
 
-    logger.info(f"Watching {WATCH_DIR} with {args.workers} worker(s)...")
+    logger.info(f"Watching {args.watch_dir} with {args.workers} worker(s)...")
 
     try:
         while True:

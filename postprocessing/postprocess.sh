@@ -18,6 +18,7 @@ BASENAME=$(basename "$INPUT_VIDEO" | sed 's/\.[^.]*$//')
 # Paths relative to script directory
 ORIGINAL_WAV="${SCRIPT_DIR}/${BASENAME}_original.wav"
 FILTERED_WAV="${SCRIPT_DIR}/out/${BASENAME}_filtered.wav"
+OUTPUT_VIDEO_TEMP="${SCRIPT_DIR}/${BASENAME}.temp.mp4"
 OUTPUT_VIDEO="${SCRIPT_DIR}/${BASENAME}_processed.mp4"
 
 # Ensure output dir exists
@@ -38,7 +39,8 @@ fi
 mv "$FILTERED_OUT" "$FILTERED_WAV"
 
 echo "Merging filtered audio with original video..."
-ffmpeg -i "$INPUT_VIDEO" -i "$FILTERED_WAV" -c:v copy -map 0:v:0 -map 1:a:0 -shortest "$OUTPUT_VIDEO" -y
+ffmpeg -i "$INPUT_VIDEO" -i "$FILTERED_WAV" -c:v copy -map 0:v:0 -map 1:a:0 -shortest "$OUTPUT_VIDEO_TEMP" -y
+mv "$OUTPUT_VIDEO_TEMP" "$OUTPUT_VIDEO"
 
 # Cleanup intermediate files
 echo "Cleaning up temporary files..."

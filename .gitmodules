@@ -1,0 +1,3 @@
+[submodule "youtube-upload"]
+	path = youtube
+	url = git@github.com:JosefKuchar/youtube-upload.git

@@ -8,6 +8,7 @@ import subprocess
 import threading
 import time
 from datetime import datetime
+import os
 
 import omegaconf
 import pydantic
@@ -57,7 +58,7 @@ def record(url: str, name: str, length: int):
             "yt-dlp",
             url,
             "-o",
-            f"outputs/{name}_{current_time}.mp4",
+            f"outputs/{name}_{current_time}.temp.mp4",
         ]
     )
 
@@ -67,6 +68,12 @@ def record(url: str, name: str, length: int):
     # Stop recording
     process.send_signal(signal.SIGINT)
     process.wait()  # wait for the process to terminate
+
+    # Rename the temporary file to final name
+    os.rename(
+        f"outputs/{name}_{current_time}.temp.mp4",
+        f"outputs/{name}_{current_time}.mp4",
+    )
 
     logger.info("Job finished")
 
