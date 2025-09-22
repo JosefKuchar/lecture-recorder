@@ -66,11 +66,29 @@ This service watches new files and uploads them to YouTube. You need to configur
 
 1. Configure the YouTube upload settings by following the instructions in the `youtube/README.md` file.
 
-2. Run the upload service:
-   ```sh
-   uv run upload_service.py
+2. Create a configuration file `upload.yaml`
+   There are several options, none are mandatory.
+
+   You can specify playlists so that the videos are automatically added to the correct playlist based on their name.
+   ```yaml
+   playlists:
+       - name: "pv123"
+         playlist_id: "PLxxxxxx1"
+       - name: "pv456"
+         playlist_id: "PLxxxxxx2"
    ```
-3. The service will automatically upload new processed recordings in the `postprocessing` folder to YouTube. You can also monitor raw recordings in the `outputs` folder using the `--watch-dir` option.
+
+   You can also specify the directory to watch and the number of upload workers (default is 1).
+   ```yaml
+   watch_dir: "postprocessing"
+   num_workers: 1
+   ```
+
+3. Run the upload service:
+   ```sh
+   uv run upload_service.py upload.yaml
+   ```
+4. The service will automatically upload new recordings to YouTube.
 
 
 ---
