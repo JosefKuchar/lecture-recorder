@@ -85,7 +85,7 @@ def upload_video(file_path: str, playlists: list[Playlist]):
     # Find playlist ID if configured
     playlist_id = None
     for pl in playlists:
-        if pl.name == path.stem:
+        if path.stem.startswith(pl.name):
             playlist_id = pl.playlist_id
             break
     if playlist_id is None:
